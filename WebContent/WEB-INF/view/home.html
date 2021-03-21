@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Home page</title>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div class="container">
+		
+		<a sec:authorize="hasRole('EMPLOYEE')" th:href="@{/addTour}" class="btn btn-primary">Add a new tour</a>
+		<a th:href="@{/showOffer}" class="btn btn-primary">Show our offer</a>
+		<a th:href="@{/showOfferForNextMonth}" class="btn btn-primary">Show next month offer</a>
+		<a sec:authorize="hasRole('CLIENT')" th:href="@{/addComment}" class="btn btn-primary">Add comment</a>
+		<a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-secondary float-right">Login</a>
+		<a sec:authorize="!isAnonymous()" th:href="@{/logout}" class="btn btn-secondary float-right">Logout</a>
+		
+		<br>
+		<br>
+		
+		<h1>Hello <span sec:authorize="isAuthenticated()">
+								<span sec:authentication="name"></span>
+							</span>
+							<span sec:authorize="isAnonymous()">dear guest</span>
+		</h1>
+		<h2>Welcome to our travel agency</h2>
+		
+		<div class="card bg-light mb-4" style="max-width: 18rem;" th:if="${openWeatherMap != null}">
+			<div class="card-header">
+				Current weather
+			</div>
+  			<div class="card-body">
+    			<h5 class="card-title">
+    				Location: <span th:text="${openWeatherMap.name}"></span>, <span th:text="${openWeatherMap.sys.country}"></span>
+    			</h5>
+    			<p class="card-text">Temperature: <span th:text="${openWeatherMap.main.temp}"></span>&#176;C<br></p>
+    			<p class="card-text">Weather: <span th:text="${openWeatherMap.weather[0].main}"></span><br></p>
+    			<p class="card-text">Description: <span th:text="${openWeatherMap.weather[0].description}"></span><br></p>
+    			<p class="card-text">Cloudiness: <span th:text="${openWeatherMap.clouds.all}"></span>%<br></p>
+    			<p class="card-text">Wind speed: <span th:text="${openWeatherMap.wind.speed}"></span>m/s<br></p>
+    			<p class="card-text">Pressure: <span th:text="${openWeatherMap.main.pressure}"></span><br></p>
+    			<p class="card-text">Humidity: <span th:text="${openWeatherMap.main.humidity}"></span>%<br></p>
+    			<p class="card-text">Sunrise: <span th:text="${#dates.format(new java.util.Date(openWeatherMap.sys.sunrise*1000), 'HH:mm:ss')}"></span> UTC<br></p>
+    			<p class="card-text">Sunset: <span th:text="${#dates.format(new java.util.Date(openWeatherMap.sys.sunset*1000), 'HH:mm:ss')}"></span> UTC</p>
+  			</div>
+		</div>
+	
+		<div class="card bg-warning mb-4" style="max-width: 18rem;" th:if="${openWeatherMap == null}">
+			<div class="card-header">
+				<span class="text-muted">Weather data can not be loaded, there is some technical issue.</span>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

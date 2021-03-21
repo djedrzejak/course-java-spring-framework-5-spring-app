@@ -1,0 +1,6 @@
+@charset "UTF-8";
+@import "style.css";
+
+html, body {
+	background-image: url("../img/signin.png");
+}
